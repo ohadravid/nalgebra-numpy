@@ -98,7 +98,7 @@ where
 /// The array dtype must match the output type exactly.
 /// If desired, you can convert the array to the desired type in Python
 /// using [`numpy.ndarray.astype`](https://numpy.org/devdocs/reference/generated/numpy.ndarray.astype.html).
-pub fn matrix_from_numpy<N, R, C>(py: pyo3::Python, input: &PyAny) -> Result<nalgebra::MatrixMN<N, R, C>, Error>
+pub fn matrix_from_numpy<N, R, C>(py: pyo3::Python, input: &PyAny) -> Result<nalgebra::OMatrix<N, R, C>, Error>
 where
 	N: nalgebra::Scalar + numpy::Element,
 	R: nalgebra::Dim,
@@ -201,7 +201,7 @@ where
 	}
 
 	// Check the data type of the input array.
-	if npyffi::array::PY_ARRAY_API.PyArray_EquivTypenums((*(*array).descr).type_num, N::ffi_dtype() as u32 as i32) != 1 {
+	if npyffi::array::PY_ARRAY_API.PyArray_EquivTypenums((*(*array).descr).type_num, N::npy_type() as u32 as i32) != 1 {
 		return Err(make_error());
 	}
 
